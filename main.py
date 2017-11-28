@@ -1,14 +1,12 @@
 import gui
-
+from gui import config
+from getData import get_data
+translate_to_screen = lambda distance: int(distance)
+center = config["screenX"]/2
 def main():
-    gui.draw_point((15,15))
-    for i in range(50):
-        print(i)
-        gui.draw_point((i, i))
-
-    for i in range(50):
-
-        gui.delete_point((i,i))
+    points = get_data()
+    for point in points:
+        gui.draw_point((center,translate_to_screen(point)))
 
 
 

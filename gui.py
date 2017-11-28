@@ -3,7 +3,7 @@ from _thread import start_new_thread
 points = []
 config={
     "screenX":300,
-    "screenY":300,
+    "screenY":500,
     "screenTitle":"SKA"
 }
 window = Tk()
@@ -25,4 +25,3 @@ def delete_point(c):
         #canvas.delete(point[0])
     except IndexError:
         pass
-
