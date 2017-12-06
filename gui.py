@@ -10,10 +10,21 @@ window = Tk()
 window.title(config["screenTitle"])
 canvas = Canvas(window, width=config["screenX"],height=config["screenY"],background="white")
 canvas.pack()
-def draw_point(new_point):
+def draw_point(new_point:tuple):
     points.append(canvas.create_rectangle(new_point[0],new_point[1],new_point[0]+1,new_point[1]+1,fill="black"))
-
-def delete_point(c):
+def get_coordinates(p):
+    try:
+        return (int(canvas.coords(p)[0]),int(canvas.coords(p)[1]))
+    except IndexError:
+        return None
+def find_point(point):
+    try:
+        for p in points:
+            if int(canvas.coords(p)[0]) == c[0] and int(canvas.coords(p)[1]) == c[1]:
+                return p
+    except:
+        pass
+def delete_point(c:tuple):
     try:
         for p in points:
             if int(canvas.coords(p)[0]) == c[0] and int(canvas.coords(p)[1]) == c[1]:
