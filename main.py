@@ -31,7 +31,7 @@ sensors = load_sensors_data("sensors.csv")
 def mapFromTo(x,a,b,c,d):
     y=(x-a)/(b-a)*(d-c)+c
     return y
-mapToScreen = lambda x: (mapFromTo(x[0], min([d[0] for d in corners]),max([d[0] for d in corners]),0,1) * (720+200), mapFromTo(x[1], min([d[1] for d in corners]),max([d[1] for d in corners]),0,1)*(1000) )
+mapToScreen = lambda x: (mapFromTo(x[0], min([d[0] for d in corners]),max([d[0] for d in corners]),0,1) * (720), mapFromTo(x[1], min([d[1] for d in corners]),max([d[1] for d in corners]),0,1)*(900) )
 
 def main():
     gui.updateState([(mapToScreen(x),x[2]) for x in sensors.values()])

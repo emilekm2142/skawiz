@@ -15,8 +15,8 @@ def colorFader(c1,c2,mix=0): #fade (linear interpolate) from color c1 (at mix=0)
     return mpl.colors.to_hex((1-mix)*c1 + mix*c2)
 
 config={
-    "screenX":1280,
-    "screenY":1000,
+    "screenX":720,
+    "screenY":900,
     "screenTitle":"Tellus"
 }
 window = Tk()
