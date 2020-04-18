@@ -3,10 +3,16 @@ from datetime import datetime, timedelta
 from _thread import start_new_thread
 from typing import Tuple, List
 import string
+import numpy as np
 import colorsys
+import matplotlib as mpl
 import copy
 from statistics import mean, StatisticsError
 sensor_points = {}
+def colorFader(c1,c2,mix=0): #fade (linear interpolate) from color c1 (at mix=0) to c2 (mix=1)
+    c1=np.array(mpl.colors.to_rgb(c1))
+    c2=np.array(mpl.colors.to_rgb(c2))
+    return mpl.colors.to_hex((1-mix)*c1 + mix*c2)
 
 config={
     "screenX":1280,
@@ -33,29 +39,30 @@ def update_sensor_point(id,  xy, value, timestamp):
         pass
     min_hsl = (228/360, 1, .50)
     max_hsl = (360/360, 1, .50)
-    progress = mapFromTo(value, 18,25,min_hsl[0],max_hsl[0])
+    progress = mapFromTo(value, 19,27,0,1)
     #print(progress)
+    if value > 26: progress=max_hsl[0]
+    if value <18: progress=min_hsl[0]
+    progress= max(progress, 0)
+    progress = min(progress,1)
     color = colorsys.hls_to_rgb(progress,0.5,1)
+
+    new_color = colorFader("#00ffea", "#ff0004", progress)
     #print(color)
     if id not in sensor_points:
-        sensor_points[id] = [canvas.create_oval(xy[0]-8,xy[1]-8,xy[0]+8,xy[1]+8, fill='#%02x%02x%02x' % (int(color[0]*255),int(color[1]*255),int(color[2]*255))), timestamp, value, canvas.create_text(xy[0]+20,xy[1]+3,text=value)]
+        sensor_points[id] = [canvas.create_oval(xy[0]-8,xy[1]-8,xy[0]+8,xy[1]+8, fill=new_color), timestamp, value, canvas.create_text(xy[0]+20,xy[1]+3,text=value)]
     else:
-        canvas.itemconfig(sensor_points[id][0], fill='#%02x%02x%02x' % (int(color[0]*255),int(color[1]*255),int(color[2]*255)) )
+        canvas.itemconfig(sensor_points[id][0], fill=new_color )
         sensor_points[id][1]=timestamp
         sensor_points[id][2]=value
         canvas.itemconfigure(sensor_points[id][3], text = str(value))
-    new_dict = sensor_points
-    copied=False
-    for key,value in sensor_points.items():
-        
-        if value[1]+timedelta(minutes = 60) < timestamp:
-            if not copied:
-                copied=True
-                new_dict = copy.deepcopy(sensor_points)
-            canvas.delete(sensor_points[id][0])
-            canvas.delete(sensor_points[id][3])
-            del new_dict[key]
-    if copied: sensor_points=new_dict
+    # new_dict =  copy.deepcopy(sensor_points)
+    # for key,value in sensor_points.items():
+    #     if value[1]+timedelta(minutes = 60) < timestamp:
+    #         canvas.delete(new_dict[id][0])
+    #         canvas.delete(new_dict[id][3])
+    #         del new_dict[key]
+    # sensor_points=new_dict
     
     #print(sensor_points)
 def updateState(points):

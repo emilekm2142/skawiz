@@ -1,9 +1,7 @@
 import gui
-from scipy.interpolate import interp1d
 from gui import config
 from getData import get_data,vary_point
 from time import sleep
-import pandas as pd
 from dateutil import parser
 from datetime import datetime, timedelta
 from _thread import start_new_thread
